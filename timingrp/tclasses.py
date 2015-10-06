@@ -1,6 +1,6 @@
+from __future__ import division, print_function
 import csv
 import datetime as dt
-from __future__ import division, print_function
 import numpy as np
 
 
