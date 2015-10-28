@@ -2,12 +2,27 @@ from __future__ import division, print_function
 import csv
 import datetime as dt
 import numpy as np
-
+import matplotlib.pyplot as plt
+from pylab import *
 
 def print_time(seconds):
     sec = dt.timedelta(seconds=int(seconds))
     d = dt.datetime(1,1,1) + sec
     print("%d hours, %d minutes and %d seconds" % (d.hour, d.minute, d.second))
+
+def myplot(a,b):
+    fig = figure()
+    _ =plot(a,b)
+    return fig
+
+    """TODO:
+    sanitize input:
+    first remove alle the <br>
+    then inout the data from the back, inorder to avoid the extra commas
+
+
+    """
+
 
 class tevent:
     def __init__(self,v):
@@ -19,15 +34,26 @@ class tevent:
         self.year = int(v[2][6:8])
         self.end = v[3]
         self.hour = int(v[2][9:11])
-        self.duration = int(v[4])
+        self.duration = int(float(v[4]))
         self.project = v[5]
         self.date = dt.date(2000+self.year,self.month,self.day)
 
-
+    def print_all(self):
+        print(self.app )
+        print(self.path )
+        print(self.start_date )
+        print(self.day )
+        print(self.month)
+        print(self.year)
+        print(self.end )
+        print(self.hour)
+        print(self.duration )
+        print(self.project )
+        print(self.date )
 
 class tlogevents:
     def __init__(self,file_name):
-        #open the cvs file, example file_name='lastweek.cvs'
+        #open the cvs file, example file_name='lastweek.csv'
         self._cvsrawfile = open(file_name, 'rt')
         #builds a reader. ATTENTION it doesn't always work, don't know why
         self._cvsreader = csv.reader(self._cvsrawfile, delimiter=',')
@@ -50,6 +76,7 @@ class tlogevents:
         self._total_seconds = None
         self._daily_usage_vector = None
         self._busiest_day = None
+        self._hour_usage_matrix = None
 
         self.daily_average_seconds = self.total_seconds / self.num_of_days
         self.daily_average_seconds_disc = self.total_seconds / (self.num_of_days - self.num_of_inactive_days)
@@ -77,12 +104,12 @@ class tlogevents:
 
     @property
     def hour_usage_matrix(self):
-        if _hour_usage_matrix is None:
-            mat = np.zeros((self.num_of_days,24))
+        if self._hour_usage_matrix is None:
+            mat = np.zeros((24,self.num_of_days))
             for event in self.events:
-                mat[event.date - self.start_date][event.hour]+=event.duration
-            _hour_usage_matrix = mat
-        return _hour_usage_matrix
+                mat[event.hour][(event.date - self.start_date).days]+=event.duration
+            self._hour_usage_matrix = mat
+        return self._hour_usage_matrix
 
     @property
     def daily_usage_vector(self):
@@ -100,10 +127,13 @@ class tlogevents:
         return self._busiest_day
 
     def hour_heat_map(self):
-        imshow(self.hour_usage_matrix)
+        fig = plt.figure()
+        plt.imshow(self.hour_usage_matrix)
+        self.figure = fig
 
     def daily_usage_plot(self):
-        plot(range(self.num_of_days),self.daily_usage_vector)
+        return myplot(range(self.num_of_days),self.daily_usage_vector)
+
     def print_analysis(self):
         print ("START DATE")
         print (self.start_date)
