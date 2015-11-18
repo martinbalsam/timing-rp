@@ -23,6 +23,9 @@ def myplot(a,b):
 
     """
 
+def test_A(self):
+    
+
 
 class tevent:
     def __init__(self,v):
