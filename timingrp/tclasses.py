@@ -1,4 +1,4 @@
-from __future__ import division, print_function 
+from __future__ import division, print_function
 import csv
 import datetime as dt
 import numpy as np
@@ -7,8 +7,14 @@ from pylab import *
 
 def print_time(seconds):
     sec = dt.timedelta(seconds=int(seconds))
-    d = dt.datetime(1,1,1) + sec
+    d = dt.time(0,0,0) + sec
     print("%d hours, %d minutes and %d seconds" % (d.hour, d.minute, d.second))
+
+def print_time_right(seconds):
+    sec = dt.timedelta(seconds=int(seconds))
+    d = dt.time(0,0,0)+ sec
+    print("%d hour"+"s"*(d.hour!=1)+", %d minute"+"s"*(d.minute!=1)+" and %d seconds"+"s"*(d.second!=1) % (d.hour, d.minute, d.second))
+
 
 def myplot(a,b):
     fig = figure()
@@ -24,7 +30,7 @@ def myplot(a,b):
     """
 
 def test_A(self):
-    
+
 
 
 class tevent:
@@ -65,7 +71,7 @@ class tlogevents:
         self._a=[]
         for row in self._cvsreader:
             self._a.append(row)
-        
+
         #creates a list of tevent class objects. Skips the first element because it's just labels.
         self.events = []
         for row in self._a[1:]:
@@ -73,7 +79,7 @@ class tlogevents:
         self.start_date = self.events[0].date
         self.end_date = self.events[-1].date
         self.num_of_days = (self.end_date - self.start_date).days + 1
-        
+
         #lazy stuff
         self._num_of_inactive_days = None
         self._total_seconds = None
@@ -83,7 +89,7 @@ class tlogevents:
 
         self.daily_average_seconds = self.total_seconds / self.num_of_days
         self.daily_average_seconds_disc = self.total_seconds / (self.num_of_days - self.num_of_inactive_days)
-        
+
     @property
     def num_of_inactive_days(self):
         if self._num_of_inactive_days is None:
@@ -123,7 +129,7 @@ class tlogevents:
             self._daily_usage_vector = vect
         return self._daily_usage_vector
 
-    @property 
+    @property
     def busiest_day(self):
         if self._busiest_day is None:
             self._busiest_day =  self.start_date + dt.timedelta(days=self.daily_usage_vector.index(max(self.daily_usage_vector)))

@@ -4,7 +4,7 @@ import argparse
 This script sanitize the raw data experted from "Timing.app",
 it adds the proper double quotes around the "Path" attribute,
 and it removes unwanted double quotes inside the "Path" attribute,
-that may yeld an unwanted escape of the field.
+that may yield an unwanted escape of the field.
 
 --- TODO ---
 speedup:
@@ -17,7 +17,7 @@ cleanup:
 delete unused files
 """
 parser = argparse.ArgumentParser(description="writes the input data into a sanitized .csv file")
-parser.add_argument('path', nargs=1, type = str)
+parser.add_argument('path', nargs=1, type = str, help='the path of the input raw .csv file to parse')
 args = parser.parse_args()
 
 
@@ -46,7 +46,7 @@ with open(input_data,'r') as original:
             try:
                 #add quotation around the path attribute and writes it in a new file
                 new.write(matches.group(1)+'"'+matches.group(2)+'"'+matches.group(3)+'\n')
-            #catches lines that don't match the regex and writes them in an errors.log file  
+            #catches lines that don't match the regex and writes them in an errors.log file
             except AttributeError:
                 errors.write(line)
                 continue
